@@ -1,4 +1,4 @@
-// db.js
+// db/db.js
 const mysql = require('mysql2/promise');
 
 const pool = mysql.createPool({
@@ -8,7 +8,7 @@ const pool = mysql.createPool({
   database: 'your_database',
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0
+  queueLimit: 0,
 });
 
 async function query(sql, values) {
