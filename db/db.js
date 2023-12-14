@@ -21,4 +21,37 @@ async function query(sql, values) {
   }
 }
 
-module.exports = { query };
+async function getAllDepartments() {
+  return await query('SELECT * FROM department');
+}
+
+async function getAllRoles() {
+  return await query('SELECT * FROM role');
+}
+
+async function getAllEmployees() {
+  return await query('SELECT * FROM employee');
+}
+
+async function addDepartment(name) {
+  return await query('INSERT INTO department (name) VALUES (?)', [name]);
+}
+
+async function addRole(title, salary, departmentId) {
+  return await query('INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)', [title, salary, departmentId]);
+}
+
+async function addEmployee(firstName, lastName, roleId, managerId) {
+  return await query('INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)', [
+    firstName,
+    lastName,
+    roleId,
+    managerId,
+  ]);
+}
+
+async function updateEmployeeRole(employeeId, newRoleId) {
+  return await query('UPDATE employee SET role_id = ? WHERE id = ?', [newRoleId, employeeId]);
+}
+
+module.exports = { query, getAllDepartments, getAllRoles, getAllEmployees, addDepartment, addRole, addEmployee, updateEmployeeRole };
