@@ -2,6 +2,17 @@
 const inquirer = require('inquirer');
 const db = require('../db/db');
 
+// Add the following roles to the choices array
+const roleChoices = [
+  { name: 'Sales Lead', value: 'Sales Lead' },
+  { name: 'Salesperson', value: 'Salesperson' },
+  { name: 'Lead Engineer', value: 'Lead Engineer' },
+  { name: 'Software Engineer', value: 'Software Engineer' },
+  { name: 'Account Manager', value: 'Account Manager' },
+  { name: 'Accountant', value: 'Accountant' },
+  { name: 'Legal Team Lead', value: 'Legal Team Lead' },
+];
+
 async function viewAllDepartments() {
   const departments = await db.getAllDepartments();
   console.table(departments);
@@ -73,7 +84,7 @@ async function addEmployeePrompt() {
       type: 'list',
       name: 'roleId',
       message: 'Select the role for the employee:',
-      choices: roles.map((role) => ({ name: role.title, value: role.id })),
+      choices: roleChoices,
     },
     {
       type: 'list',
