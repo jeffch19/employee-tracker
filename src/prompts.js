@@ -4,14 +4,15 @@ const db = require('../db/db');
 
 // Add the following roles to the choices array
 const roleChoices = [
-  { name: 'Sales Lead', value: 'Sales Lead' },
-  { name: 'Salesperson', value: 'Salesperson' },
-  { name: 'Lead Engineer', value: 'Lead Engineer' },
-  { name: 'Software Engineer', value: 'Software Engineer' },
-  { name: 'Account Manager', value: 'Account Manager' },
-  { name: 'Accountant', value: 'Accountant' },
-  { name: 'Legal Team Lead', value: 'Legal Team Lead' },
+  { name: 'Sales Lead', value: 1 },
+  { name: 'Salesperson', value: 2 },
+  { name: 'Lead Engineer', value: 3 },
+  { name: 'Software Engineer', value: 4 },
+  { name: 'Account Manager', value: 5 },
+  { name: 'Accountant', value: 6 },
+  { name: 'Legal Team Lead', value: 7 },
 ];
+
 
 async function viewAllDepartments() {
   const departments = await db.getAllDepartments();
