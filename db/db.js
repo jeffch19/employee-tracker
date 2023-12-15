@@ -13,8 +13,8 @@ const pool = mysql.createPool({
 
 /**
  * Executes a SQL query and returns the result.
- * @param {string} sql - 
- * @param {Array} values - 
+ * @param {string} sql 
+ * @param {Array} values 
  * @returns {Promise<Array>} 
  */
 async function query(sql, values) {
