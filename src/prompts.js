@@ -1,18 +1,6 @@
-// src/prompts.js
 const inquirer = require('inquirer');
 const db = require('../db/db');
-
-// Add the following roles to the choices array
-const roleChoices = [
-  { name: 'Sales Lead', value: 1 },
-  { name: 'Salesperson', value: 2 },
-  { name: 'Lead Engineer', value: 3 },
-  { name: 'Software Engineer', value: 4 },
-  { name: 'Account Manager', value: 5 },
-  { name: 'Accountant', value: 6 },
-  { name: 'Legal Team Lead', value: 7 },
-];
-
+const process = require('process'); // Import the process module
 
 async function viewAllDepartments() {
   const departments = await db.getAllDepartments();
@@ -20,12 +8,25 @@ async function viewAllDepartments() {
 }
 
 async function viewAllRoles() {
-  const roles = await db.getAllRoles();
+  const query = `
+    SELECT id, title, salary, department_id
+    FROM role;
+  `;
+
+  const roles = await db.query(query);
   console.table(roles);
 }
 
 async function viewAllEmployees() {
-  const employees = await db.getAllEmployees();
+  const query = `
+    SELECT employees.id, employees.first_name, employees.last_name, roles.title, roles.salary, department.name AS department_name, CONCAT(managers.first_name, ' ', managers.last_name) AS manager_name
+    FROM employees
+    JOIN roles ON employees.role_id = roles.id
+    JOIN department ON roles.department_id = department.id
+    LEFT JOIN employees AS managers ON employees.manager_id = managers.id;
+  `;
+
+  const employees = await db.query(query);
   console.table(employees);
 }
 
@@ -68,6 +69,7 @@ async function addRolePrompt() {
 }
 
 async function addEmployeePrompt() {
+  // Update roleChoices dynamically after adding a new role
   const roles = await db.getAllRoles();
   const employees = await db.getAllEmployees();
   const employeeQuestions = [
@@ -85,7 +87,7 @@ async function addEmployeePrompt() {
       type: 'list',
       name: 'roleId',
       message: 'Select the role for the employee:',
-      choices: roleChoices,
+      choices: roles.map((role) => ({ name: role.title, value: role.id })),
     },
     {
       type: 'list',
@@ -138,6 +140,7 @@ async function start() {
           'Add a role',
           'Add an employee',
           'Update an employee role',
+          'Quit', // Add a "Quit" option
         ],
       },
     ]);
@@ -163,6 +166,9 @@ async function start() {
         break;
       case 'Update an employee role':
         await updateEmployeeRolePrompt();
+        break;
+      case 'Quit':
+        process.exit(); // Exit the application
         break;
       default:
         console.log('Invalid action');
