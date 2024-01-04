@@ -9,8 +9,9 @@ async function viewAllDepartments() {
 
 async function viewAllRoles() {
   const query = `
-    SELECT id, title, salary, department_id
-    FROM role;
+    SELECT role.id, role.title, role.salary, department.name AS department_name
+    FROM role
+    JOIN department ON role.department_id = department.id;
   `;
 
   const roles = await db.query(query);
@@ -19,11 +20,11 @@ async function viewAllRoles() {
 
 async function viewAllEmployees() {
   const query = `
-    SELECT employees.id, employees.first_name, employees.last_name, roles.title, roles.salary, department.name AS department_name, CONCAT(managers.first_name, ' ', managers.last_name) AS manager_name
-    FROM employees
-    JOIN roles ON employees.role_id = roles.id
-    JOIN department ON roles.department_id = department.id
-    LEFT JOIN employees AS managers ON employees.manager_id = managers.id;
+    SELECT employee.id, employee.first_name, employee.last_name, role.title AS role_title, role.salary, department.name AS department_name, CONCAT(managers.first_name, ' ', managers.last_name) AS manager_name
+    FROM employee
+    JOIN role ON employee.role_id = role.id
+    JOIN department ON role.department_id = department.id
+    LEFT JOIN employee AS managers ON employee.manager_id = managers.id;
   `;
 
   const employees = await db.query(query);
@@ -69,7 +70,6 @@ async function addRolePrompt() {
 }
 
 async function addEmployeePrompt() {
-  // Update roleChoices dynamically after adding a new role
   const roles = await db.getAllRoles();
   const employees = await db.getAllEmployees();
   const employeeQuestions = [
